@@ -50,28 +50,38 @@ public class MyPlayer {
     }
 
     public void printBoards() {
-        ArrayList<Integer> prettyBoard = new ArrayList<Integer>();
-        int[][] board = new int[3][3];
-        prettyBoard.add(3);
-        prettyBoard.add(3);
-        prettyBoard.add(3);
+        ArrayList<Integer> board = new ArrayList<Integer>();
+        board.add(1);
+        board.add(0);
+        board.add(0);
 
-        for (int[] i : board) Arrays.fill(i, 1);
-
-        System.out.println(prettyBoard);
-        for (int y = 0; y < board.length; y++) {
-            for (int x = 0; x < board[0].length; x++) {
-//                remove everything right and above
-                board[x][y] = 0;
-//                prettify the board and print it
-                for (int[] i : board) {
-                    for (int j = 0; j < board[0].length; j++) {
-                        if (i[j] != 1) break;
-                        prettyBoard.set(j, prettyBoard.get(j)+1);
+//        fill the boards, starting from 1,0,0
+//        this will produce 9; 10 are still missing...
+        for (int columns = 1; columns < 4; columns++) {
+            for (int rows = 1; rows < 4; rows++) {
+                if(columns + 1 < 3) {
+                    if (board.get(columns) > board.get(columns-1)){
+                       board.set(columns, 0);
                     }
                 }
+                board.set(columns-1, rows);
+                System.out.println(board);
             }
         }
+        for (int rows = 1; rows < 4; rows++) {
+            for (int columns = 1; columns < 4; columns++) {
+                board.set(columns-1, rows);
+                if (board.get(0) < board.get(1)) {
+                    board.set(1, 0);
+                }
+                if (board.get(1) < board.get(2)) {
+                    board.set(2,0);
+                }
+                System.out.println(board);
+            }
+        }
+
+
     }
 
 
