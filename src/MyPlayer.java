@@ -50,37 +50,15 @@ public class MyPlayer {
     }
 
     public void printBoards() {
-        ArrayList<Integer> board = new ArrayList<Integer>();
-        board.add(1);
-        board.add(0);
-        board.add(0);
-
-//        fill the boards, starting from 1,0,0
-//        this will produce 9; 10 are still missing...
-        for (int columns = 1; columns < 4; columns++) {
-            for (int rows = 1; rows < 4; rows++) {
-                if(columns + 1 < 3) {
-                    if (board.get(columns) > board.get(columns-1)){
-                       board.set(columns, 0);
+        for (int i = 1; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                for (int k = 0; k < 4; k++) {
+                    if (i >= j && j >= k) {
+                        System.out.println(i+" "+j+" "+k);
                     }
                 }
-                board.set(columns-1, rows);
-                System.out.println(board);
             }
         }
-        for (int rows = 1; rows < 4; rows++) {
-            for (int columns = 1; columns < 4; columns++) {
-                board.set(columns-1, rows);
-                if (board.get(0) < board.get(1)) {
-                    board.set(1, 0);
-                }
-                if (board.get(1) < board.get(2)) {
-                    board.set(2,0);
-                }
-                System.out.println(board);
-            }
-        }
-
 
     }
 
