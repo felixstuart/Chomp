@@ -33,7 +33,7 @@ public class MyPlayer {
          */
         toColumns();
 //        print all the different possible boards in one go
-        printBoards();
+        printBoards(3,2,1);
         Point myMove = new Point(row, column);
         System.out.println(Arrays.toString(columns));
         return myMove;
@@ -49,18 +49,29 @@ public class MyPlayer {
         }
     }
 
-    public void printBoards() {
-        for (int i = 1; i < 4; i++) {
-            for (int j = 0; j < 4; j++) {
-                for (int k = 0; k < 4; k++) {
+    public void printBoards(int column1, int column2, int column3) {
+        System.out.println(column1 + " " + column2 + " " + column3);
+        System.out.println("--------------------------");
+        for (int i = column1; i > 0; i--) {
+            for (int j = column2; j >= 0; j--) {
+                for (int k = column3; k >= 0; k--) {
+                    if(i == column1 && k == column2 && j == column3) {
+                        continue;
+                    }
                     if (i >= j && j >= k) {
-                        System.out.println(i+" "+j+" "+k);
+                        if (i == 2) {
+                            if (i == j && j == k) {
+                                System.out.println(i+" "+j+" "+k);
+                                break;
+                            }
+                        }
+                        if (j == k) {
+                            System.out.println(i+" "+j+" "+k);
+                        }
                     }
                 }
             }
         }
-
     }
-
 
 }
