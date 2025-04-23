@@ -33,7 +33,8 @@ public class MyPlayer {
          */
         toColumns();
 //        print all the different possible boards in one go
-        printBoards(3,2,1);
+//        printBoards();
+        printPossibleBoards(3, 3, 3);
         Point myMove = new Point(row, column);
         System.out.println(Arrays.toString(columns));
         return myMove;
@@ -49,29 +50,49 @@ public class MyPlayer {
         }
     }
 
-    public void printBoards(int column1, int column2, int column3) {
-        System.out.println(column1 + " " + column2 + " " + column3);
-        System.out.println("--------------------------");
-        for (int i = column1; i > 0; i--) {
-            for (int j = column2; j >= 0; j--) {
-                for (int k = column3; k >= 0; k--) {
-                    if(i == column1 && k == column2 && j == column3) {
-                        continue;
-                    }
+    public void printBoards() {
+        for (int i = 3; i > 0; i--) {
+            for (int j = 3; j >= 0; j--) {
+                for (int k = 3; k >= 0; k--) {
                     if (i >= j && j >= k) {
-                        if (i == 2) {
-                            if (i == j && j == k) {
-                                System.out.println(i+" "+j+" "+k);
-                                break;
-                            }
-                        }
-                        if (j == k) {
-                            System.out.println(i+" "+j+" "+k);
-                        }
+                        System.out.println(i + " " + j + " " + k);
                     }
                 }
             }
         }
     }
 
+    public void printPossibleBoards(int column1, int column2, int column3) {
+        System.out.println(column1 + " " + column2 + " " + column3);
+        System.out.println("--------------------------");
+        int col1 = column1;
+        int col2 = column2;
+        int col3 = column3;
+        for (int i = 1; i <= column3; i++) {
+            column3 -= i;
+            System.out.println(column1 + " " + column2 + " " + column3);
+            column3 = col3;
+        }
+        for (int i = 1; i <= column2; i++) {
+            column2 -= i;
+            if (column2 < 3) {
+                column3 = column2;
+            }
+            System.out.println(column1 + " " + column2 + " " + column3);
+            column2 = col2;
+        }
+        column3 = col3;
+        for (int i = 1; i < column1; i++) {
+            column1 -= i;
+            if (column1 < 3) {
+                column2 = column1;
+            }
+            if (column2 < 3) {
+                column3 = column2;
+            }
+            System.out.println(column1 + " " + column2 + " " + column3);
+            column1 = col1;
+        }
+    }
 }
+
