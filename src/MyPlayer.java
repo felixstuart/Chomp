@@ -1,6 +1,8 @@
 import java.awt.*;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Objects;
 
 public class MyPlayer {
     public Chip[][] gameBoard;
@@ -35,6 +37,7 @@ public class MyPlayer {
 //        print all the different possible boards in one go
 //        printBoards();
         printPossibleBoards(3, 3, 3);
+        System.out.println(isBoardWinning(new Board(2, 0, 0)));
         Point myMove = new Point(row, column);
         System.out.println(Arrays.toString(columns));
         return myMove;
@@ -94,5 +97,57 @@ public class MyPlayer {
             column1 = col1;
         }
     }
-}
 
+    public ArrayList<Board> getPossibleBoards(int column1, int column2, int column3) {
+        ArrayList<Board> possibleBoards = new ArrayList<>();
+        int col1 = column1;
+        int col2 = column2;
+        int col3 = column3;
+        for (int i = 1; i <= column3; i++) {
+            column3 -= i;
+            possibleBoards.add(new Board(column1, column2, column3));
+            column3 = col3;
+        }
+        for (int i = 1; i <= column2; i++) {
+            column2 -= i;
+            if (column2 < 3) {
+                column3 = column2;
+            }
+            possibleBoards.add(new Board(column1, column2, column3));
+            column2 = col2;
+        }
+        column3 = col3;
+        for (int i = 1; i < column1; i++) {
+            column1 -= i;
+            if (column1 < 3) {
+                column2 = column1;
+            }
+            if (column2 < 3) {
+                column3 = column2;
+            }
+            possibleBoards.add(new Board(column1, column2, column3));
+            column1 = col1;
+        }
+        return possibleBoards;
+    }
+
+    public boolean isBoardWinning(Board board) {
+        Board rootWin = new Board(1, 0, 0);
+
+        int winningBoards = 0;
+        if (board.equals(rootWin)) return true;
+
+        ArrayList<Board> descendants = getPossibleBoards(board.getColumn1(), board.getColumn2(), board.getColumn3());
+
+        if (descendants.contains(rootWin)) {
+            return true;
+        } else {
+            for (Board descendant : descendants) {
+                if (isBoardWinning(descendant)) {
+                    winningBoards++;
+                }
+            }
+        }
+        return winningBoards > 0 && winningBoards < descendants.size();
+    }
+}

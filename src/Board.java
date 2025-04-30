@@ -5,10 +5,14 @@ public class Board {
     private int column2;
     private int column3;
 
+    public boolean isWinBoard;
+
     public Board(int column1, int column2, int column3) {
         this.column1 = column1;
         this.column2 = column2;
         this.column3 = column3;
+
+        this.isWinBoard = false;
     }
 
     public int getColumn1() {
