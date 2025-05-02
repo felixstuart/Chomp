@@ -28,6 +28,11 @@ public class Board {
     }
 
     @Override
+    public String toString() {
+        return this.getColumn1() + " " + this.getColumn2() + " " + this.getColumn3();
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Board that = (Board) o;
