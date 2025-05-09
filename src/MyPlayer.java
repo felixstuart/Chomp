@@ -45,7 +45,7 @@ public class MyPlayer {
         toColumns();
 //        print all the different possible boards in one go
 //        printBoards();
-//        printPossibleBoards(3, 3, 3);
+//        printPossibleBoards(2, 2, 0);
 //        getMove(new Board(3, 3, 3));
         isBoardWinning(new Board(2, 2, 0));
         Point myMove = new Point(row, column);
@@ -76,39 +76,6 @@ public class MyPlayer {
         }
     }
 
-    public void printPossibleBoards(int column1, int column2, int column3) {
-        System.out.println(column1 + " " + column2 + " " + column3);
-        System.out.println("--------------------------");
-        int col1 = column1;
-        int col2 = column2;
-        int col3 = column3;
-        for (int i = 1; i <= column3; i++) {
-            column3 -= i;
-            System.out.println(column1 + " " + column2 + " " + column3);
-            column3 = col3;
-        }
-        for (int i = 1; i <= column2; i++) {
-            column2 -= i;
-            if (column2 < 3) {
-                column3 = column2;
-            }
-            System.out.println(column1 + " " + column2 + " " + column3);
-            column2 = col2;
-        }
-        column3 = col3;
-        for (int i = 1; i < column1; i++) {
-            column1 -= i;
-            if (column1 < 3) {
-                column2 = column1;
-            }
-            if (column2 < 3) {
-                column3 = column2;
-            }
-            System.out.println(column1 + " " + column2 + " " + column3);
-            column1 = col1;
-        }
-    }
-
     public ArrayList<Board> getPossibleBoards(int column1, int column2, int column3) {
         ArrayList<Board> possibleBoards = new ArrayList<>();
         int col1 = column1;
@@ -122,7 +89,9 @@ public class MyPlayer {
         for (int i = 1; i <= column2; i++) {
             column2 -= i;
             if (column2 < 3) {
-                column3 = column2;
+                if (column3 != 0) {
+                    column3 = column2;
+                }
             }
             possibleBoards.add(new Board(column1, column2, column3));
             column2 = col2;
@@ -136,6 +105,9 @@ public class MyPlayer {
             if (column2 < 3) {
                 column3 = column2;
             }
+            if (col3 == 0) {
+                column3 = 0;
+            }
             possibleBoards.add(new Board(column1, column2, column3));
             column1 = col1;
         }
@@ -144,6 +116,7 @@ public class MyPlayer {
 
     public boolean isBoardWinning(Board board) {
         for (Board descendant : getPossibleBoards(board.getColumn1(), board.getColumn2(), board.getColumn3())) {
+            System.out.println(descendant);
             if (loseBoards.contains(descendant)) {
                 System.out.println("yay!");
                 winBoards.add(descendant);
