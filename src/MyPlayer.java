@@ -1,10 +1,6 @@
 import java.awt.*;
-import java.lang.reflect.Array;
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Objects;
-
 public class MyPlayer {
     public Chip[][] gameBoard;
     public int[] columns;
@@ -32,11 +28,8 @@ public class MyPlayer {
         System.out.println("MyPlayer Move");
 
         gameBoard = pBoard;
-        int column = 0;
-        int row = 0;
-
-        row = 1;
-        column = 1;
+        int column = 1;
+        int row = 1;
 
         /*
           This code will run each time the "MyPlayer" button is pressed.
@@ -44,28 +37,17 @@ public class MyPlayer {
           You'll be returning a data type called Point which consists of two integers.
          */
         toColumns();
-//        print all the different possible boards in one go
-//        printBoards();
-//        printPossibleBoards(2, 2, 0);
-//        getMove(new Board(3, 3, 3));
-        BoardWins(new Board(1, 1, 0));
+
+        System.out.println();
+        getWinLoseBoards();
         System.out.println(winBoards);
         System.out.println(loseBoards);
 
-        BoardWins(new Board(1, 1, 1));
-        System.out.println(winBoards);
-        System.out.println(loseBoards);
 
-        BoardWins(new Board(2, 1, 1));
-        System.out.println(winBoards);
-        System.out.println(loseBoards);
-
-        BoardWins(new Board(2, 2, 0));
-        System.out.println(winBoards);
-        System.out.println(loseBoards);
-
+        System.out.println(getMove(new Board(3, 3, 3)));
         Point myMove = new Point(row, column);
         System.out.println(Arrays.toString(columns));
+
 
         return myMove;
     }
@@ -92,43 +74,6 @@ public class MyPlayer {
         }
     }
 
-    public ArrayList<Board> getPossibleBoards(int column1, int column2, int column3) {
-        ArrayList<Board> possibleBoards = new ArrayList<>();
-        int col1 = column1;
-        int col2 = column2;
-        int col3 = column3;
-        for (int i = 1; i <= column3; i++) {
-            column3 -= i;
-            possibleBoards.add(new Board(column1, column2, column3));
-            column3 = col3;
-        }
-        for (int i = 1; i <= column2; i++) {
-            column2 -= i;
-            if (column2 < 3) {
-                if (column3 != 0) {
-                    column3 = column2;
-                }
-            }
-            possibleBoards.add(new Board(column1, column2, column3));
-            column2 = col2;
-        }
-        column3 = col3;
-        for (int i = 1; i < column1; i++) {
-            column1 -= i;
-            if (column1 < 3) {
-                column2 = column1;
-            }
-            if (column2 < 3) {
-                column3 = column2;
-            }
-            if (col3 == 0) {
-                column3 = 0;
-            }
-            possibleBoards.add(new Board(column1, column2, column3));
-            column1 = col1;
-        }
-        return possibleBoards;
-    }
 
     public ArrayList<Board> getPossibleBoards(Board board) {
         int column1 = board.getColumn1();
@@ -157,13 +102,18 @@ public class MyPlayer {
         for (int i = 1; i < column1; i++) {
             column1 -= i;
             if (column1 < 3) {
-                column2 = column1;
+                if (column1 < column2) {
+                    column2 = column1;
+                }
             }
             if (column2 < 3) {
                 column3 = column2;
             }
             if (col3 == 0) {
                 column3 = 0;
+            }
+            if (col2 == 0) {
+                column2 = 0;
             }
             possibleBoards.add(new Board(column1, column2, column3));
             column1 = col1;
@@ -172,37 +122,6 @@ public class MyPlayer {
     }
 
 
-
-    public boolean isBoardWinning(Board board) {
-        System.out.println("-------------------");
-        int winBoardCount = 0;
-        int loseBoardCount = 0;
-        ArrayList<Integer> loseBoardIDs = new ArrayList<>();
-        ArrayList<Board> possibleBoards = getPossibleBoards(board.getColumn1(), board.getColumn2(), board.getColumn3());
-        for (Board descendant : possibleBoards) {
-            isBoardWinning(descendant);
-            System.out.println(descendant);
-            if (loseBoards.contains(descendant)) {
-                System.out.println("yay!");
-                winBoardCount++;
-            }
-            if (winBoards.contains(descendant)) {
-                loseBoardCount++;
-                loseBoardIDs.add(possibleBoards.indexOf(descendant));
-            }
-        }
-        if (loseBoardCount == loseBoardIDs.size()) {
-            for (Integer loseBoardID : loseBoardIDs) {
-                Board target = possibleBoards.get(loseBoardID);
-                if (!loseBoards.contains(target)) loseBoards.add(possibleBoards.get(loseBoardID));
-            }
-        }
-        if (winBoardCount < possibleBoards.size()) {
-            if (!winBoards.contains(board)) winBoards.add(board);
-            return true;
-        }
-        return false;
-    }
 
     public void BoardWins(Board board) {
 //        first, we need to get the derivatives of the board.
@@ -218,40 +137,59 @@ public class MyPlayer {
         int loseCount = 0;
         for (Board derivative : derivatives) {
             if (loseBoards.contains(derivative)) {
-                winCount++;
+                loseCount++;
             }
             if (winBoards.contains(derivative)) {
-                loseCount++;
+                winCount++;
             }
         }
 //        if the count is equal to the number of possible boards,
 //        the board we have is a lose board. However, if the count
 //        is less then we have a win board!
 
-        if (winCount < derivatives.size() && winCount > 0) {
+        if (loseCount <= derivatives.size() && loseCount > 0) {
             winBoards.add(board);
             System.out.println("board " + board + " is a win board.");
         }
-        if (loseCount == derivatives.size()) {
+        if (winCount == derivatives.size()) {
             loseBoards.add(board);
             System.out.println("board " + board + " is a lose board.");
         }
-
-
+        System.out.println(winCount);
+        System.out.println(loseCount);
     }
 
-    public void getMove(Board board) {
-//        a win board is any board with one winning option
-//        -- we already have the isBoardWinning, so we need to calculate through the given board and just return the board that's winning.
-        ArrayList<Board> descendants = getPossibleBoards(board.getColumn1(), board.getColumn2(), board.getColumn3());
-        int[] bestMove = new int[2];
-        for (Board descendant : descendants) {
-            if (isBoardWinning(descendant)) {
-//                figure out how to convert the new board into coordinates
-                System.out.println(descendant.getColumn1() + " " + descendant.getColumn2() + " " + descendant.getColumn3());
-//                return bestMove;
+    public void getWinLoseBoards() {
+        for (int i = 1; i < 4; i++) {
+            for (int j = 0; j <= 3; j++) {
+                for (int k = 0; k <= 3; k++) {
+                    if (i >= j && j >= k) {
+                        System.out.println(new Board(i, j, k));
+                        System.out.println(getPossibleBoards(new Board(i, j, k)));
+                        BoardWins(new Board(i, j, k));
+                    }
+                }
             }
         }
-//        return null;
     }
+
+
+    public Point getMove(Board board) {
+
+        Point coordinates = new Point();
+
+//        find the "target" board. The target
+//        board is the board that is a lose board
+        ArrayList<Board> descendants = getPossibleBoards(board);
+
+        for (Board descendant : descendants) {
+            if (loseBoards.contains(descendant)) {
+                System.out.println(descendant);
+            }
+        }
+
+        return coordinates;
+    }
+
 }
+
