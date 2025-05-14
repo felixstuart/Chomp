@@ -1,5 +1,6 @@
 import java.awt.*;
 import java.lang.reflect.Array;
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
@@ -47,7 +48,22 @@ public class MyPlayer {
 //        printBoards();
 //        printPossibleBoards(2, 2, 0);
 //        getMove(new Board(3, 3, 3));
-        isBoardWinning(new Board(2, 2, 0));
+        BoardWins(new Board(1, 1, 0));
+        System.out.println(winBoards);
+        System.out.println(loseBoards);
+
+        BoardWins(new Board(1, 1, 1));
+        System.out.println(winBoards);
+        System.out.println(loseBoards);
+
+        BoardWins(new Board(2, 1, 1));
+        System.out.println(winBoards);
+        System.out.println(loseBoards);
+
+        BoardWins(new Board(2, 2, 0));
+        System.out.println(winBoards);
+        System.out.println(loseBoards);
+
         Point myMove = new Point(row, column);
         System.out.println(Arrays.toString(columns));
 
@@ -114,16 +130,114 @@ public class MyPlayer {
         return possibleBoards;
     }
 
+    public ArrayList<Board> getPossibleBoards(Board board) {
+        int column1 = board.getColumn1();
+        int column2 = board.getColumn2();
+        int column3 = board.getColumn3();
+        ArrayList<Board> possibleBoards = new ArrayList<>();
+        int col1 = column1;
+        int col2 = column2;
+        int col3 = column3;
+        for (int i = 1; i <= column3; i++) {
+            column3 -= i;
+            possibleBoards.add(new Board(column1, column2, column3));
+            column3 = col3;
+        }
+        for (int i = 1; i <= column2; i++) {
+            column2 -= i;
+            if (column2 < 3) {
+                if (column3 != 0) {
+                    column3 = column2;
+                }
+            }
+            possibleBoards.add(new Board(column1, column2, column3));
+            column2 = col2;
+        }
+        column3 = col3;
+        for (int i = 1; i < column1; i++) {
+            column1 -= i;
+            if (column1 < 3) {
+                column2 = column1;
+            }
+            if (column2 < 3) {
+                column3 = column2;
+            }
+            if (col3 == 0) {
+                column3 = 0;
+            }
+            possibleBoards.add(new Board(column1, column2, column3));
+            column1 = col1;
+        }
+        return possibleBoards;
+    }
+
+
+
     public boolean isBoardWinning(Board board) {
-        for (Board descendant : getPossibleBoards(board.getColumn1(), board.getColumn2(), board.getColumn3())) {
+        System.out.println("-------------------");
+        int winBoardCount = 0;
+        int loseBoardCount = 0;
+        ArrayList<Integer> loseBoardIDs = new ArrayList<>();
+        ArrayList<Board> possibleBoards = getPossibleBoards(board.getColumn1(), board.getColumn2(), board.getColumn3());
+        for (Board descendant : possibleBoards) {
+            isBoardWinning(descendant);
             System.out.println(descendant);
             if (loseBoards.contains(descendant)) {
                 System.out.println("yay!");
-                winBoards.add(descendant);
-                return true;
+                winBoardCount++;
+            }
+            if (winBoards.contains(descendant)) {
+                loseBoardCount++;
+                loseBoardIDs.add(possibleBoards.indexOf(descendant));
             }
         }
+        if (loseBoardCount == loseBoardIDs.size()) {
+            for (Integer loseBoardID : loseBoardIDs) {
+                Board target = possibleBoards.get(loseBoardID);
+                if (!loseBoards.contains(target)) loseBoards.add(possibleBoards.get(loseBoardID));
+            }
+        }
+        if (winBoardCount < possibleBoards.size()) {
+            if (!winBoards.contains(board)) winBoards.add(board);
+            return true;
+        }
         return false;
+    }
+
+    public void BoardWins(Board board) {
+//        first, we need to get the derivatives of the board.
+//        if the board has all win boards, it's a lose board.
+//        if the board has at least one lose board, it's a win board.
+//        probably the only issue is that we only start with one
+//        lose board. the trick to fix this is to add more.
+//        the best way to do this is going to be to find them.
+//        start by going from corner to corner and looking for them 😭
+        ArrayList<Board> derivatives = getPossibleBoards(board);
+
+        int winCount = 0;
+        int loseCount = 0;
+        for (Board derivative : derivatives) {
+            if (loseBoards.contains(derivative)) {
+                winCount++;
+            }
+            if (winBoards.contains(derivative)) {
+                loseCount++;
+            }
+        }
+//        if the count is equal to the number of possible boards,
+//        the board we have is a lose board. However, if the count
+//        is less then we have a win board!
+
+        if (winCount < derivatives.size() && winCount > 0) {
+            winBoards.add(board);
+            System.out.println("board " + board + " is a win board.");
+        }
+        if (loseCount == derivatives.size()) {
+            loseBoards.add(board);
+            System.out.println("board " + board + " is a lose board.");
+        }
+
+
     }
 
     public void getMove(Board board) {
