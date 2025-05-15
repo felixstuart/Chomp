@@ -14,7 +14,7 @@ public class MyPlayer {
         loseBoards = new ArrayList<>();
         winBoards = new ArrayList<>();
 
-        Board root = new Board(1, 0, 0);
+        Board root = new Board(3, 3, 3);
 
         loseBoards.add(root);
         /*
@@ -38,16 +38,11 @@ public class MyPlayer {
          */
         toColumns();
 
-        System.out.println();
         getWinLoseBoards();
-        System.out.println(winBoards);
-        System.out.println(loseBoards);
 
-
-        System.out.println(getMove(new Board(3, 3, 3)));
+        System.out.println(getMove(new Board(1, 1, 0)));
         Point myMove = new Point(row, column);
         System.out.println(Arrays.toString(columns));
-
 
         return myMove;
     }
@@ -149,14 +144,10 @@ public class MyPlayer {
 
         if (loseCount <= derivatives.size() && loseCount > 0) {
             winBoards.add(board);
-            System.out.println("board " + board + " is a win board.");
         }
         if (winCount == derivatives.size()) {
             loseBoards.add(board);
-            System.out.println("board " + board + " is a lose board.");
         }
-        System.out.println(winCount);
-        System.out.println(loseCount);
     }
 
     public void getWinLoseBoards() {
@@ -182,9 +173,35 @@ public class MyPlayer {
 
         for (Board descendant : descendants) {
             if (loseBoards.contains(descendant)) {
-                System.out.println(descendant);
+//                figure out how to get to the target from the current board
+//                the x coordinate can be figured out by looking at how "far"
+//                out the board has been untouched. i.e. for board 3,1,1, the
+//                x coordinate must be 1. to figure out the y-coordinate, can
+//                compare the columns vs the original board
+
+                int x = 0;
+                int y = 0;
+                if (descendant.getColumn2() < board.getColumn2()) {
+                    x = 1;
+                } else if (descendant.getColumn3() < board.getColumn3()) {
+                    x = 2;
+                }
+
+                switch (x) {
+                    case 0:
+                        y = board.getColumn1() - descendant.getColumn1();
+                    case 1:
+                        y = board.getColumn2() - descendant.getColumn2();
+                    case 2:
+                        y = board.getColumn3() - descendant.getColumn3();
+                }
+
+                coordinates.setLocation(x, y);
+                return coordinates;
             }
         }
+
+        System.out.println("death board");
 
         return coordinates;
     }
