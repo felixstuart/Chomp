@@ -24,9 +24,6 @@ public class Board {
         return column3;
     }
 
-    public int lowestColumn() {
-        return Math.max((Math.max(getColumn1(), getColumn2())), getColumn3());
-    }
 
     @Override
     public String toString() {

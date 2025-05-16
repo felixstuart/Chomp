@@ -36,15 +36,15 @@ public class MyPlayer {
           Add your code to return the row and the column of the chip you want to take.
           You'll be returning a data type called Point which consists of two integers.
          */
+
         toColumns();
 
         getWinLoseBoards();
+        System.out.println(loseBoards);
 
-        System.out.println(getMove(new Board(3, 3, 3)));
-        Point myMove = new Point(row, column);
-        System.out.println(Arrays.toString(columns));
-
-        return myMove;
+//        slice the columns to be a 3x3
+        System.out.println(reduceColumns());
+        return getMove(reduceColumns());
     }
 
     public void toColumns() {
@@ -57,6 +57,27 @@ public class MyPlayer {
         }
     }
 
+    public Board reduceColumns() {
+        Board board;
+
+        int[] firstThree = new int[3];
+
+        System.arraycopy(columns, 0, firstThree, 0, 3);
+
+//        ok, now take the values and if they're greater
+//        than 3, make them three. if they are less than 3,
+//        leave them.
+
+        for (int i = 0; i < 3; i++) {
+            if (firstThree[i] > 3) {
+                firstThree[i] = 3;
+            }
+        }
+
+        board = new Board(firstThree[0], firstThree[1], firstThree[2]);
+
+        return board;
+    }
     public void printBoards() {
         for (int i = 3; i > 0; i--) {
             for (int j = 3; j >= 0; j--) {
@@ -68,7 +89,6 @@ public class MyPlayer {
             }
         }
     }
-
 
     public ArrayList<Board> getPossibleBoards(Board board) {
         int column1 = board.getColumn1();
@@ -116,8 +136,6 @@ public class MyPlayer {
         return possibleBoards;
     }
 
-
-
     public void BoardWins(Board board) {
 //        first, we need to get the derivatives of the board.
 //        if the board has all win boards, it's a lose board.
@@ -162,7 +180,6 @@ public class MyPlayer {
         }
     }
 
-
     public Point getMove(Board board) {
         Point coordinates = new Point();
 
@@ -170,8 +187,17 @@ public class MyPlayer {
 //        board is the board that is a lose board
         ArrayList<Board> descendants = getPossibleBoards(board);
 
+        if (!board.equals(new Board(1, 0, 0))) {
+            if (board.getColumn3() > board.getColumn2() && board.getColumn2() != 0) {
+                coordinates.setLocation(2, 0);
+            }
+            if (board.getColumn2() > board.getColumn1()) {
+                coordinates.setLocation(1, 0);
+            }
+        }
         for (Board descendant : descendants) {
             if (loseBoards.contains(descendant)) {
+                System.out.println(descendant);
 //                figure out how to get to the target from the current board
 //                the x coordinate can be figured out by looking at how "far"
 //                out the board has been untouched. i.e. for board 3,1,1, the
@@ -198,6 +224,7 @@ public class MyPlayer {
         }
 
         System.out.println("death board");
+
 
         return coordinates;
     }
