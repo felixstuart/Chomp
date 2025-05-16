@@ -40,7 +40,7 @@ public class MyPlayer {
 
         getWinLoseBoards();
 
-        System.out.println(getMove(new Board(1, 1, 0)));
+        System.out.println(getMove(new Board(3, 3, 3)));
         Point myMove = new Point(row, column);
         System.out.println(Arrays.toString(columns));
 
@@ -164,7 +164,6 @@ public class MyPlayer {
 
 
     public Point getMove(Board board) {
-
         Point coordinates = new Point();
 
 //        find the "target" board. The target
@@ -178,7 +177,6 @@ public class MyPlayer {
 //                out the board has been untouched. i.e. for board 3,1,1, the
 //                x coordinate must be 1. to figure out the y-coordinate, can
 //                compare the columns vs the original board
-
                 int x = 0;
                 int y = 0;
                 if (descendant.getColumn2() < board.getColumn2()) {
@@ -187,14 +185,12 @@ public class MyPlayer {
                     x = 2;
                 }
 
-                switch (x) {
-                    case 0:
-                        y = board.getColumn1() - descendant.getColumn1();
-                    case 1:
-                        y = board.getColumn2() - descendant.getColumn2();
-                    case 2:
-                        y = board.getColumn3() - descendant.getColumn3();
-                }
+                y = switch (x) {
+                    case 0 -> descendant.getColumn1();
+                    case 1 -> descendant.getColumn2();
+                    case 2 -> descendant.getColumn3();
+                    default -> y;
+                };
 
                 coordinates.setLocation(x, y);
                 return coordinates;
