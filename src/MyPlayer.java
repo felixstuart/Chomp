@@ -39,11 +39,16 @@ public class MyPlayer {
 
         toColumns();
 
+        printBoards();
+
         getWinLoseBoards();
         System.out.println(loseBoards);
 
+        getPossibleBoards(new BigBoard(columns));
+
 //        slice the columns to be a 3x3
         System.out.println(reduceColumns());
+        System.out.println(getMove(reduceColumns()));
         return getMove(reduceColumns());
     }
 
@@ -78,16 +83,32 @@ public class MyPlayer {
 
         return board;
     }
+
     public void printBoards() {
-        for (int i = 3; i > 0; i--) {
-            for (int j = 3; j >= 0; j--) {
-                for (int k = 3; k >= 0; k--) {
-                    if (i >= j && j >= k) {
-                        System.out.println(i + " " + j + " " + k);
+        for (int i = 10; i > 0; i--) {
+            for (int j = 10; j >= 0; j--) {
+                for (int k = 10; k >= 0; k--) {
+                    for (int l = 10; l >= 0; l--) {
+                        for (int m = 10; m >= 0; m--) {
+                            for (int n = 10; n >= 0; n--) {
+                                for (int o = 10; o >= 0; o--) {
+                                    for (int p = 10; p >= 0; p--) {
+                                        for (int q = 10; q >= 0; q--) {
+                                            for (int r = 10; r >= 0; r--) {
+                                                if (i >= j && j >= k && k >= l && l >= m && m >= n && n >= o && o >= p && p >= q && q >= r) {
+
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
         }
+
     }
 
     public ArrayList<Board> getPossibleBoards(Board board) {
@@ -134,6 +155,45 @@ public class MyPlayer {
             column1 = col1;
         }
         return possibleBoards;
+    }
+
+    public ArrayList<BigBoard> getPossibleBoards(BigBoard board) {
+        int[] columns = {
+                board.getColumn1(),
+                board.getColumn2(),
+                board.getColumn3(),
+                board.getColumn4(),
+                board.getColumn5(),
+                board.getColumn6(),
+                board.getColumn7(),
+                board.getColumn8(),
+                board.getColumn9(),
+                board.getColumn10()
+        };
+
+        ArrayList<BigBoard> possibleBoards = new ArrayList<>();
+
+        int[] cols = columns;
+
+        for (int i = 10; i >= 0; i--) {
+            if (i == 9) {
+                for (int j = 1; j < columns[i]; j++) {
+                    columns[i] -= j;
+                    possibleBoards.add(new BigBoard(columns));
+                    columns[i] = cols[i];
+                }
+            } else {
+                if (columns[i] < 10) {
+//                    make every column to the right of the current one equal to the current one
+                    for (int j = i; j < 9 - i; j++) {
+                        System.out.println(j);
+                    }
+                }
+            }
+        }
+//        System.out.println(possibleBoards);
+        return possibleBoards;
+
     }
 
     public void BoardWins(Board board) {
@@ -188,12 +248,14 @@ public class MyPlayer {
         ArrayList<Board> descendants = getPossibleBoards(board);
 
         if (!board.equals(new Board(1, 0, 0))) {
-            if (board.getColumn3() > board.getColumn2() && board.getColumn2() != 0) {
-                coordinates.setLocation(2, 0);
-            }
-            if (board.getColumn2() > board.getColumn1()) {
+//            check if 1,0 is a valid coordinate
+            if (board.getColumn2() >= 1) {
                 coordinates.setLocation(1, 0);
+            } else if (board.getColumn1() >= 2) {
+                coordinates.setLocation(0, 1);
             }
+
+
         }
         for (Board descendant : descendants) {
             if (loseBoards.contains(descendant)) {
@@ -203,19 +265,19 @@ public class MyPlayer {
 //                out the board has been untouched. i.e. for board 3,1,1, the
 //                x coordinate must be 1. to figure out the y-coordinate, can
 //                compare the columns vs the original board
-                int x = 0;
                 int y = 0;
+                int x = 0;
                 if (descendant.getColumn2() < board.getColumn2()) {
-                    x = 1;
+                    y = 1;
                 } else if (descendant.getColumn3() < board.getColumn3()) {
-                    x = 2;
+                    y = 2;
                 }
 
-                y = switch (x) {
+                x = switch (y) {
                     case 0 -> descendant.getColumn1();
                     case 1 -> descendant.getColumn2();
                     case 2 -> descendant.getColumn3();
-                    default -> y;
+                    default -> x;
                 };
 
                 coordinates.setLocation(x, y);
