@@ -44,7 +44,12 @@ public class MyPlayer {
         getWinLoseBoards();
         System.out.println(loseBoards);
 
-        getPossibleBoards(new BigBoard(columns));
+//        getPossibleBoards(new BigBoard(columns));
+
+        System.out.println(getPossibleBoards(new Board(3, 2, 1), 0));
+        System.out.println(getPossibleBoards(new Board(3, 2, 1)));
+        System.out.println(getPossibleBoards(new Board(3, 2, 1), 0) == getPossibleBoards(new Board(3, 2, 1)));
+
 
 //        slice the columns to be a 3x3
         System.out.println(reduceColumns());
@@ -157,6 +162,55 @@ public class MyPlayer {
         return possibleBoards;
     }
 
+    public ArrayList<Board> getPossibleBoards(Board board, int useadifferentalgorithmlol) {
+        int column1 = board.getColumn1();
+        int column2 = board.getColumn2();
+        int column3 = board.getColumn3();
+
+        int[] columns = {
+                board.getColumn1(),
+                board.getColumn2(),
+                board.getColumn3()
+        };
+        ArrayList<Board> possibleBoards = new ArrayList<>();
+        int col1 = column1;
+        int col2 = column2;
+        int col3 = column3;
+        int[] copycols = columns.clone();
+
+        boolean[] resetcols = new boolean[3];
+
+        for (int i = 2; i >= 1; i--) {
+            for (int j = 1; j <= columns[i]; j++) {
+                columns[i] -= j;
+            }
+
+            if (columns[i] < 3) {
+                if (i < 2 && columns[i + 1] != 0) {
+                    columns[i + 1] = columns[i];
+                    resetcols[i] = true;
+                }
+
+                if (i == 0) {
+                    if (columns[1] < columns[2]) columns[2] = columns[1];
+                    if (copycols[1] == 0) columns[1] = 0;
+                    if (copycols[2] == 0) columns[2] = 0;
+
+                }
+            }
+
+
+            possibleBoards.add(new Board(columns[0], columns[1], columns[2]));
+
+            for (int j = 0; j < resetcols.length; j++) {
+                if (resetcols[j]) {
+                    columns[j] = copycols[j];
+                }
+            }
+        }
+
+        return possibleBoards;
+    }
     public ArrayList<BigBoard> getPossibleBoards(BigBoard board) {
         int[] columns = {
                 board.getColumn1(),
@@ -175,7 +229,7 @@ public class MyPlayer {
 
         int[] cols = columns;
 
-        for (int i = 10; i >= 0; i--) {
+        for (int i = 9; i >= 0; i--) {
             if (i == 9) {
                 for (int j = 1; j < columns[i]; j++) {
                     columns[i] -= j;
