@@ -42,18 +42,16 @@ public class MyPlayer {
         printBoards();
 
         getWinLoseBoards();
-        System.out.println(loseBoards);
-
 //        getPossibleBoards(new BigBoard(columns));
 
-        System.out.println(getPossibleBoards(new Board(3, 2, 1), 0));
-        System.out.println(getPossibleBoards(new Board(3, 2, 1)));
+        System.out.println("new algorithm:" + getPossibleBoards(new Board(3, 2, 1), 0));
+        System.out.println("old algorithm:" + getPossibleBoards(new Board(3, 2, 1)));
         System.out.println(getPossibleBoards(new Board(3, 2, 1), 0) == getPossibleBoards(new Board(3, 2, 1)));
 
 
 //        slice the columns to be a 3x3
-        System.out.println(reduceColumns());
-        System.out.println(getMove(reduceColumns()));
+//        System.out.println(reduceColumns());
+//        System.out.println(getMove(reduceColumns()));
         return getMove(reduceColumns());
     }
 
@@ -163,49 +161,42 @@ public class MyPlayer {
     }
 
     public ArrayList<Board> getPossibleBoards(Board board, int useadifferentalgorithmlol) {
-        int column1 = board.getColumn1();
-        int column2 = board.getColumn2();
-        int column3 = board.getColumn3();
-
         int[] columns = {
                 board.getColumn1(),
                 board.getColumn2(),
                 board.getColumn3()
         };
         ArrayList<Board> possibleBoards = new ArrayList<>();
-        int col1 = column1;
-        int col2 = column2;
-        int col3 = column3;
         int[] copycols = columns.clone();
 
-        boolean[] resetcols = new boolean[3];
-
-        for (int i = 2; i >= 1; i--) {
-            for (int j = 1; j <= columns[i]; j++) {
+        for (int i = 2; i >= 0; i--) {
+            for (int j = 1; j <= copycols[i]; j++) {
                 columns[i] -= j;
-            }
-
-            if (columns[i] < 3) {
-                if (i < 2 && columns[i + 1] != 0) {
-                    columns[i + 1] = columns[i];
-                    resetcols[i] = true;
+//                check that all columns are descending in value
+//                also, make sure column[0] equals at least 1
+                boolean[] resetcols = new boolean[10];
+                for (int k = 1; k < columns.length; k++) {
+                    if (columns[k] > columns[k - 1]) {
+                        if (columns[k] < copycols[k]) {
+                            columns[k] = copycols[k];
+                            resetcols[k] = true;
+                        } else {
+                            columns[k] = columns[k - 1];
+                            resetcols[k - 1] = true;
+                            resetcols[k] = true;
+                        }
+                    }
+                }
+                if (columns[0] > 0) {
+                    possibleBoards.add(new Board(columns[0], columns[1], columns[2]));
                 }
 
-                if (i == 0) {
-                    if (columns[1] < columns[2]) columns[2] = columns[1];
-                    if (copycols[1] == 0) columns[1] = 0;
-                    if (copycols[2] == 0) columns[2] = 0;
-
+                for (int k = 0; k < resetcols.length; k++) {
+                    if (resetcols[k]) {
+                        columns[k] = copycols[k];
+                    }
                 }
-            }
-
-
-            possibleBoards.add(new Board(columns[0], columns[1], columns[2]));
-
-            for (int j = 0; j < resetcols.length; j++) {
-                if (resetcols[j]) {
-                    columns[j] = copycols[j];
-                }
+                columns[i] = copycols[i];
             }
         }
 
