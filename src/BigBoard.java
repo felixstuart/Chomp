@@ -35,6 +35,20 @@ public class BigBoard extends Board {
         this.column10 = columns[9];
     }
 
+    public int[] getAllColumns() {
+        return new int[]{
+                this.getColumn1(),
+                this.getColumn2(),
+                this.getColumn3(),
+                this.getColumn4(),
+                this.getColumn5(),
+                this.getColumn6(),
+                this.getColumn7(),
+                this.getColumn8(),
+                this.getColumn9(),
+                this.getColumn10()
+        };
+    }
 
     public int getColumn4() {
         return column4;

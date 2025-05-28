@@ -44,10 +44,8 @@ public class MyPlayer {
         getWinLoseBoards();
 //        getPossibleBoards(new BigBoard(columns));
 
-        System.out.println("new algorithm:" + getPossibleBoards(new Board(3, 2, 1), 0));
-        System.out.println("old algorithm:" + getPossibleBoards(new Board(3, 2, 1)));
-        System.out.println(getPossibleBoards(new Board(3, 2, 1), 0) == getPossibleBoards(new Board(3, 2, 1)));
 
+        System.out.println(getPossibleBoards(new BigBoard(columns)));
 
 //        slice the columns to be a 3x3
 //        System.out.println(reduceColumns());
@@ -159,17 +157,15 @@ public class MyPlayer {
         }
         return possibleBoards;
     }
+    
+    public ArrayList<BigBoard> getPossibleBoards(BigBoard board) {
+        int[] columns = board.getAllColumns();
 
-    public ArrayList<Board> getPossibleBoards(Board board, int useadifferentalgorithmlol) {
-        int[] columns = {
-                board.getColumn1(),
-                board.getColumn2(),
-                board.getColumn3()
-        };
-        ArrayList<Board> possibleBoards = new ArrayList<>();
+        ArrayList<BigBoard> possibleBoards = new ArrayList<>();
+
         int[] copycols = columns.clone();
 
-        for (int i = 2; i >= 0; i--) {
+        for (int i = 9; i >= 0; i--) {
             for (int j = 1; j <= copycols[i]; j++) {
                 columns[i] -= j;
 //                check that all columns are descending in value
@@ -188,7 +184,7 @@ public class MyPlayer {
                     }
                 }
                 if (columns[0] > 0) {
-                    possibleBoards.add(new Board(columns[0], columns[1], columns[2]));
+                    possibleBoards.add(new BigBoard(columns));
                 }
 
                 for (int k = 0; k < resetcols.length; k++) {
@@ -200,43 +196,6 @@ public class MyPlayer {
             }
         }
 
-        return possibleBoards;
-    }
-    public ArrayList<BigBoard> getPossibleBoards(BigBoard board) {
-        int[] columns = {
-                board.getColumn1(),
-                board.getColumn2(),
-                board.getColumn3(),
-                board.getColumn4(),
-                board.getColumn5(),
-                board.getColumn6(),
-                board.getColumn7(),
-                board.getColumn8(),
-                board.getColumn9(),
-                board.getColumn10()
-        };
-
-        ArrayList<BigBoard> possibleBoards = new ArrayList<>();
-
-        int[] cols = columns;
-
-        for (int i = 9; i >= 0; i--) {
-            if (i == 9) {
-                for (int j = 1; j < columns[i]; j++) {
-                    columns[i] -= j;
-                    possibleBoards.add(new BigBoard(columns));
-                    columns[i] = cols[i];
-                }
-            } else {
-                if (columns[i] < 10) {
-//                    make every column to the right of the current one equal to the current one
-                    for (int j = i; j < 9 - i; j++) {
-                        System.out.println(j);
-                    }
-                }
-            }
-        }
-//        System.out.println(possibleBoards);
         return possibleBoards;
 
     }
