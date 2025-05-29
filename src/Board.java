@@ -30,6 +30,7 @@ public class Board {
         return this.getColumn1() + " " + this.getColumn2() + " " + this.getColumn3();
     }
 
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;

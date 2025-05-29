@@ -8,15 +8,27 @@ public class MyPlayer {
     public ArrayList<Board> loseBoards;
     public ArrayList<Board> winBoards;
 
+    public ArrayList<BigBoard> loseBigBoards;
+    public ArrayList<BigBoard> winBigBoards;
+
     public MyPlayer() {
         columns = new int[10];
 
         loseBoards = new ArrayList<>();
         winBoards = new ArrayList<>();
 
-        Board root = new Board(3, 3, 3);
+        loseBigBoards = new ArrayList<>();
+        winBigBoards = new ArrayList<>();
+
+        Board root = new Board(1, 0, 0);
+
+        BigBoard bigRoot = BigBoardHelpers.ROOT_BOARD;
 
         loseBoards.add(root);
+        loseBigBoards.add(bigRoot);
+
+        getWinLoseBoards();
+        getWinLoseBigBoards();
         /*
          * This code will run just once, when the game opens.
          * Add your code here.
@@ -39,17 +51,9 @@ public class MyPlayer {
 
         toColumns();
 
-        printBoards();
-
-        getWinLoseBoards();
-//        getPossibleBoards(new BigBoard(columns));
 
 
-        System.out.println(getPossibleBoards(new BigBoard(columns)));
 
-//        slice the columns to be a 3x3
-//        System.out.println(reduceColumns());
-//        System.out.println(getMove(reduceColumns()));
         return getMove(reduceColumns());
     }
 
@@ -86,29 +90,6 @@ public class MyPlayer {
     }
 
     public void printBoards() {
-        for (int i = 10; i > 0; i--) {
-            for (int j = 10; j >= 0; j--) {
-                for (int k = 10; k >= 0; k--) {
-                    for (int l = 10; l >= 0; l--) {
-                        for (int m = 10; m >= 0; m--) {
-                            for (int n = 10; n >= 0; n--) {
-                                for (int o = 10; o >= 0; o--) {
-                                    for (int p = 10; p >= 0; p--) {
-                                        for (int q = 10; q >= 0; q--) {
-                                            for (int r = 10; r >= 0; r--) {
-                                                if (i >= j && j >= k && k >= l && l >= m && m >= n && n >= o && o >= p && p >= q && q >= r) {
-
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
 
     }
 
@@ -232,6 +213,27 @@ public class MyPlayer {
         }
     }
 
+    public void BoardWins(BigBoard board) {
+        ArrayList<BigBoard> derivatives = getPossibleBoards(board);
+
+        int winCount = 0;
+        int loseCount = 0;
+        for (BigBoard derivative : derivatives) {
+            if (loseBigBoards.contains(derivative)) {
+                loseCount++;
+            }
+            if (winBigBoards.contains(derivative)) {
+                winCount++;
+            }
+        }
+        if (loseCount <= derivatives.size() && loseCount > 0) {
+            winBigBoards.add(board);
+        }
+        if (winCount == derivatives.size()) {
+            loseBigBoards.add(board);
+        }
+    }
+
     public void getWinLoseBoards() {
         for (int i = 1; i < 4; i++) {
             for (int j = 0; j <= 3; j++) {
@@ -242,6 +244,33 @@ public class MyPlayer {
                 }
             }
         }
+    }
+
+    public void getWinLoseBigBoards() {
+        for (int i = 10; i > 0; i--) {
+            for (int j = 10; j >= 0; j--) {
+                for (int k = 10; k >= 0; k--) {
+                    for (int l = 10; l >= 0; l--) {
+                        for (int m = 10; m >= 0; m--) {
+                            for (int n = 10; n >= 0; n--) {
+                                for (int o = 10; o >= 0; o--) {
+                                    for (int p = 10; p >= 0; p--) {
+                                        for (int q = 10; q >= 0; q--) {
+                                            for (int r = 10; r >= 0; r--) {
+                                                if (i >= j && j >= k && k >= l && l >= m && m >= n && n >= o && o >= p && p >= q && q >= r) {
+                                                    BoardWins(new BigBoard(new int[]{i, j, k, l, m, n, o, p, q, r}));
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
     }
 
     public Point getMove(Board board) {
@@ -258,8 +287,6 @@ public class MyPlayer {
             } else if (board.getColumn1() >= 2) {
                 coordinates.setLocation(0, 1);
             }
-
-
         }
         for (Board descendant : descendants) {
             if (loseBoards.contains(descendant)) {
@@ -291,6 +318,31 @@ public class MyPlayer {
 
         System.out.println("death board");
 
+
+        return coordinates;
+    }
+
+    public Point getMove(BigBoard board) {
+        Point coordinates = new Point();
+
+        ArrayList<BigBoard> descendants = getPossibleBoards(board);
+
+        if (!board.equals(BigBoardHelpers.ROOT_BOARD)) {
+//            check if 1,0 is a valid coordinate
+            if (board.getColumn2() >= 1) {
+                coordinates.setLocation(1, 0);
+            } else if (board.getColumn1() >= 2) {
+                coordinates.setLocation(0, 1);
+            }
+        }
+
+        for (BigBoard descendant : descendants) {
+            if (loseBigBoards.contains(descendant)) {
+                int x = 0;
+                int y = 0;
+                if(descendant.getColumn1())
+            }
+        }
 
         return coordinates;
     }
