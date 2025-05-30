@@ -78,6 +78,33 @@ public class BigBoard extends Board {
         return column10;
     }
 
+    public int[] asArray() {
+        return new int[]{
+                getColumn1(),
+                getColumn2(),
+                getColumn3(),
+                getColumn4(),
+                getColumn5(),
+                getColumn6(),
+                getColumn7(),
+                getColumn8(),
+                getColumn9(),
+                getColumn10()
+        };
+    }
+
+
+    //    get max column
+    public int getMaxColumn() {
+        int maxindex = 0;
+        int[] columns = this.asArray();
+        for (int i = 0; i < columns.length; i++) {
+            if (columns[i] > columns[maxindex]) {
+                maxindex = i;
+            }
+        }
+        return maxindex;
+    }
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;

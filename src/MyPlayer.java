@@ -27,8 +27,9 @@ public class MyPlayer {
         loseBoards.add(root);
         loseBigBoards.add(bigRoot);
 
-        getWinLoseBoards();
+//        getWinLoseBoards();
         getWinLoseBigBoards();
+        System.out.println(loseBigBoards);
         /*
          * This code will run just once, when the game opens.
          * Add your code here.
@@ -50,11 +51,8 @@ public class MyPlayer {
          */
 
         toColumns();
-
-
-
-
-        return getMove(reduceColumns());
+        System.out.println(getMove(new BigBoard(columns)));
+        return getMove(new BigBoard(columns));
     }
 
     public void toColumns() {
@@ -247,19 +245,17 @@ public class MyPlayer {
     }
 
     public void getWinLoseBigBoards() {
-        for (int i = 10; i > 0; i--) {
-            for (int j = 10; j >= 0; j--) {
-                for (int k = 10; k >= 0; k--) {
-                    for (int l = 10; l >= 0; l--) {
-                        for (int m = 10; m >= 0; m--) {
-                            for (int n = 10; n >= 0; n--) {
-                                for (int o = 10; o >= 0; o--) {
-                                    for (int p = 10; p >= 0; p--) {
-                                        for (int q = 10; q >= 0; q--) {
-                                            for (int r = 10; r >= 0; r--) {
-                                                if (i >= j && j >= k && k >= l && l >= m && m >= n && n >= o && o >= p && p >= q && q >= r) {
-                                                    BoardWins(new BigBoard(new int[]{i, j, k, l, m, n, o, p, q, r}));
-                                                }
+        for (int i = 1; i < 9; i++) {
+            for (int j = 0; j <= i; j++) {
+                for (int k = 0; k <= j; k++) {
+                    for (int l = 0; l <= k; l++) {
+                        for (int m = 0; m <= l; m++) {
+                            for (int n = 0; n <= m; n++) {
+                                for (int o = 0; o <= n; o++) {
+                                    for (int p = 0; p <= o; p++) {
+                                        for (int q = 0; q <= p; q++) {
+                                            for (int r = 0; r <= q; r++) {
+                                                BoardWins(new BigBoard(new int[]{i, j, k, l, m, n, o, p, q, r}));
                                             }
                                         }
                                     }
@@ -270,8 +266,9 @@ public class MyPlayer {
                 }
             }
         }
-
     }
+
+
 
     public Point getMove(Board board) {
         Point coordinates = new Point();
@@ -338,9 +335,9 @@ public class MyPlayer {
 
         for (BigBoard descendant : descendants) {
             if (loseBigBoards.contains(descendant)) {
-                int x = 0;
-                int y = 0;
-                if(descendant.getColumn1())
+                int y = descendant.getMaxColumn();
+                int x = descendant.asArray()[y];
+                coordinates.setLocation(x, y);
             }
         }
 
