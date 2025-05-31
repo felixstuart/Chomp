@@ -27,8 +27,9 @@ public class MyPlayer {
         loseBoards.add(root);
         loseBigBoards.add(bigRoot);
 
-//        getWinLoseBoards();
+        getWinLoseBoards();
         getWinLoseBigBoards();
+        System.out.println(loseBoards);
         System.out.println(loseBigBoards);
         /*
          * This code will run just once, when the game opens.
@@ -49,9 +50,17 @@ public class MyPlayer {
           Add your code to return the row and the column of the chip you want to take.
           You'll be returning a data type called Point which consists of two integers.
          */
-
         toColumns();
-        System.out.println(getMove(new BigBoard(columns)));
+
+//        getPossibleBoards(new BigBoard(columns));
+
+//        slice the columns to be a 3x3
+        System.out.println(reduceColumns());
+        System.out.println(getPossibleBoards(reduceColumns()));
+        System.out.println(loseBoards);
+        System.out.println(getMove(reduceColumns()));
+
+
         return getMove(new BigBoard(columns));
     }
 
@@ -138,7 +147,7 @@ public class MyPlayer {
     }
     
     public ArrayList<BigBoard> getPossibleBoards(BigBoard board) {
-        int[] columns = board.getAllColumns();
+        int[] columns = board.asArray();
 
         ArrayList<BigBoard> possibleBoards = new ArrayList<>();
 
@@ -186,14 +195,14 @@ public class MyPlayer {
 //        probably the only issue is that we only start with one
 //        lose board. the trick to fix this is to add more.
 //        the best way to do this is going to be to find them.
-//        start by going from corner to corner and looking for them 😭
+//        start by going from corner to corner and looking for them
         ArrayList<Board> derivatives = getPossibleBoards(board);
 
         int winCount = 0;
-        int loseCount = 0;
         for (Board derivative : derivatives) {
             if (loseBoards.contains(derivative)) {
-                loseCount++;
+                winBoards.add(board);
+                return;
             }
             if (winBoards.contains(derivative)) {
                 winCount++;
@@ -202,10 +211,6 @@ public class MyPlayer {
 //        if the count is equal to the number of possible boards,
 //        the board we have is a lose board. However, if the count
 //        is less then we have a win board!
-
-        if (loseCount <= derivatives.size() && loseCount > 0) {
-            winBoards.add(board);
-        }
         if (winCount == derivatives.size()) {
             loseBoards.add(board);
         }
@@ -215,18 +220,18 @@ public class MyPlayer {
         ArrayList<BigBoard> derivatives = getPossibleBoards(board);
 
         int winCount = 0;
-        int loseCount = 0;
         for (BigBoard derivative : derivatives) {
             if (loseBigBoards.contains(derivative)) {
-                loseCount++;
+                winBigBoards.add(board);
+                return;
             }
             if (winBigBoards.contains(derivative)) {
                 winCount++;
             }
         }
-        if (loseCount <= derivatives.size() && loseCount > 0) {
-            winBigBoards.add(board);
-        }
+//        if the count is equal to the number of possible boards,
+//        the board we have is a lose board. However, if the count
+//        is less then we have a win board!
         if (winCount == derivatives.size()) {
             loseBigBoards.add(board);
         }
@@ -234,18 +239,16 @@ public class MyPlayer {
 
     public void getWinLoseBoards() {
         for (int i = 1; i < 4; i++) {
-            for (int j = 0; j <= 3; j++) {
-                for (int k = 0; k <= 3; k++) {
-                    if (i >= j && j >= k) {
-                        BoardWins(new Board(i, j, k));
-                    }
+            for (int j = 0; j <= i; j++) {
+                for (int k = 0; k <= j; k++) {
+                    BoardWins(new Board(i, j, k));
                 }
             }
         }
     }
 
     public void getWinLoseBigBoards() {
-        for (int i = 1; i < 9; i++) {
+        for (int i = 1; i < 11; i++) {
             for (int j = 0; j <= i; j++) {
                 for (int k = 0; k <= j; k++) {
                     for (int l = 0; l <= k; l++) {
@@ -268,8 +271,6 @@ public class MyPlayer {
         }
     }
 
-
-
     public Point getMove(Board board) {
         Point coordinates = new Point();
 
@@ -284,6 +285,8 @@ public class MyPlayer {
             } else if (board.getColumn1() >= 2) {
                 coordinates.setLocation(0, 1);
             }
+
+
         }
         for (Board descendant : descendants) {
             if (loseBoards.contains(descendant)) {
