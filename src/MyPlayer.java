@@ -29,7 +29,6 @@ public class MyPlayer {
 
         getWinLoseBoards();
         getWinLoseBigBoards();
-        System.out.println(loseBoards);
         System.out.println(loseBigBoards);
         /*
          * This code will run just once, when the game opens.
@@ -52,14 +51,7 @@ public class MyPlayer {
          */
         toColumns();
 
-//        getPossibleBoards(new BigBoard(columns));
-
-//        slice the columns to be a 3x3
-        System.out.println(reduceColumns());
-        System.out.println(getPossibleBoards(reduceColumns()));
-        System.out.println(loseBoards);
-        System.out.println(getMove(reduceColumns()));
-
+        System.out.println(getMove(new BigBoard(columns)));
 
         return getMove(new BigBoard(columns));
     }
@@ -147,7 +139,7 @@ public class MyPlayer {
     }
     
     public ArrayList<BigBoard> getPossibleBoards(BigBoard board) {
-        int[] columns = board.asArray();
+        int[] columns = board.asArray;
 
         ArrayList<BigBoard> possibleBoards = new ArrayList<>();
 
@@ -339,7 +331,7 @@ public class MyPlayer {
         for (BigBoard descendant : descendants) {
             if (loseBigBoards.contains(descendant)) {
                 int y = descendant.getMaxColumn();
-                int x = descendant.asArray()[y];
+                int x = descendant.asArray[y];
                 coordinates.setLocation(x, y);
             }
         }

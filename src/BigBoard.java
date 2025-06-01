@@ -3,26 +3,15 @@ import java.util.Objects;
 
 public class BigBoard extends Board {
 
-    int column4;
-    int column5;
-    int column6;
-    int column7;
-    int column8;
-    int column9;
-    int column10;
+    public final int column4;
+    public final int column5;
+    public final int column6;
+    public final int column7;
+    public final int column8;
+    public final int column9;
+    public final int column10;
 
-    public BigBoard(int column1, int column2, int column3,
-                    int column4, int column5, int column6,
-                    int column7, int column8, int column9, int column10) {
-        super(column1, column2, column3);
-        this.column4 = column4;
-        this.column5 = column5;
-        this.column6 = column6;
-        this.column7 = column7;
-        this.column8 = column8;
-        this.column9 = column9;
-        this.column10 = column10;
-    }
+    public final int[] asArray;
 
     public BigBoard(int[] columns) {
         super(columns[0], columns[1], columns[2]);
@@ -34,22 +23,17 @@ public class BigBoard extends Board {
         this.column8 = columns[7];
         this.column9 = columns[8];
         this.column10 = columns[9];
-    }
 
-
-    public int[] asArray() {
-        return new int[]{
-                column1, column2, column3, column4, column5, column6, column7, column8, column9, column10
-        };
+        asArray = Arrays.copyOf(columns, columns.length);
     }
 
 
     //    get max column
     public int getMaxColumn() {
         int maxindex = 0;
-        int[] columns = this.asArray();
-        for (int i = 0; i < columns.length; i++) {
-            if (columns[i] > columns[maxindex]) {
+
+        for (int i = 0; i < asArray.length; i++) {
+            if (asArray[i] > asArray[maxindex]) {
                 maxindex = i;
             }
         }
@@ -59,7 +43,7 @@ public class BigBoard extends Board {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         BigBoard that = (BigBoard) o;
-        return this.asArray() == that.asArray();
+        return Arrays.equals(this.asArray, that.asArray);
     }
 
     @Override
