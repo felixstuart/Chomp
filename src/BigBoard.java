@@ -11,6 +11,8 @@ public class BigBoard extends Board {
     public final int column9;
     public final int column10;
 
+    public final int hashCode;
+
     public final int[] asArray;
 
     public BigBoard(int[] columns) {
@@ -25,6 +27,8 @@ public class BigBoard extends Board {
         this.column10 = columns[9];
 
         asArray = Arrays.copyOf(columns, columns.length);
+
+        hashCode = hashCode();
     }
 
 
@@ -43,7 +47,7 @@ public class BigBoard extends Board {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         BigBoard that = (BigBoard) o;
-        return Arrays.equals(this.asArray, that.asArray);
+        return hashCode == that.hashCode;
     }
 
     @Override

@@ -1,4 +1,6 @@
 import java.awt.*;
+import java.io.File;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 public class MyPlayer {
@@ -29,6 +31,7 @@ public class MyPlayer {
 
         getWinLoseBoards();
         getWinLoseBigBoards();
+
         System.out.println(loseBigBoards);
         /*
          * This code will run just once, when the game opens.
@@ -50,6 +53,7 @@ public class MyPlayer {
           You'll be returning a data type called Point which consists of two integers.
          */
         toColumns();
+
 
         System.out.println(getMove(new BigBoard(columns)));
 
@@ -193,7 +197,7 @@ public class MyPlayer {
         int winCount = 0;
         for (Board derivative : derivatives) {
             if (loseBoards.contains(derivative)) {
-                winBoards.add(board);
+                winBoards.add(0, board);
                 return;
             }
             if (winBoards.contains(derivative)) {
@@ -204,7 +208,7 @@ public class MyPlayer {
 //        the board we have is a lose board. However, if the count
 //        is less then we have a win board!
         if (winCount == derivatives.size()) {
-            loseBoards.add(board);
+            loseBoards.add(0, board);
         }
     }
 
@@ -214,7 +218,7 @@ public class MyPlayer {
         int winCount = 0;
         for (BigBoard derivative : derivatives) {
             if (loseBigBoards.contains(derivative)) {
-                winBigBoards.add(board);
+                winBigBoards.add(0, board);
                 return;
             }
             if (winBigBoards.contains(derivative)) {
@@ -225,7 +229,7 @@ public class MyPlayer {
 //        the board we have is a lose board. However, if the count
 //        is less then we have a win board!
         if (winCount == derivatives.size()) {
-            loseBigBoards.add(board);
+            loseBigBoards.add(0, board);
         }
     }
 
@@ -333,11 +337,11 @@ public class MyPlayer {
                 int y = descendant.getMaxColumn();
                 int x = descendant.asArray[y];
                 coordinates.setLocation(x, y);
+                return coordinates;
             }
         }
 
         return coordinates;
     }
-
 }
 
