@@ -35,10 +35,12 @@ public class BigBoard extends Board {
     //    get max column
     public int getMaxColumn() {
         int maxindex = 0;
+        int max = 0;
 
         for (int i = 0; i < asArray.length; i++) {
-            if (asArray[i] > asArray[maxindex]) {
+            if (asArray[i] > max) {
                 maxindex = i;
+                max = asArray[i];
             }
         }
         return maxindex;
@@ -52,7 +54,7 @@ public class BigBoard extends Board {
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), column4, column5, column6, column7, column8);
+        return Arrays.hashCode(asArray);
     }
 
     @Override

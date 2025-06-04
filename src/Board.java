@@ -52,6 +52,6 @@ public class Board {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getColumn1(), getColumn2(), getColumn3());
+        return Objects.hash(column1, column2, column3);
     }
 }

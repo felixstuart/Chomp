@@ -29,14 +29,7 @@ public class MyPlayer {
         loseBoards.add(root);
         loseBigBoards.add(bigRoot);
 
-        getWinLoseBoards();
         getWinLoseBigBoards();
-
-        System.out.println(loseBigBoards);
-        /*
-         * This code will run just once, when the game opens.
-         * Add your code here.
-         */
     }
 
     public Point move(Chip[][] pBoard) {
@@ -44,8 +37,6 @@ public class MyPlayer {
         System.out.println("MyPlayer Move");
 
         gameBoard = pBoard;
-        int column = 1;
-        int row = 1;
 
         /*
           This code will run each time the "MyPlayer" button is pressed.
@@ -53,9 +44,6 @@ public class MyPlayer {
           You'll be returning a data type called Point which consists of two integers.
          */
         toColumns();
-
-
-        System.out.println(getMove(new BigBoard(columns)));
 
         return getMove(new BigBoard(columns));
     }
@@ -93,7 +81,13 @@ public class MyPlayer {
     }
 
     public void printBoards() {
-
+        for (int i = 3; i > 0; i--) {
+            for (int j = i; j >= 0; j--) {
+                for (int k = j; k >= 0; k--) {
+                    System.out.println(new Board(i, j, k));
+                }
+            }
+        }
     }
 
     public ArrayList<Board> getPossibleBoards(Board board) {
@@ -334,12 +328,21 @@ public class MyPlayer {
 
         for (BigBoard descendant : descendants) {
             if (loseBigBoards.contains(descendant)) {
-                int y = descendant.getMaxColumn();
+                System.out.println(descendant);
+                int y = 0;
+                for (int i = 0; i < 10; i++) {
+                    if (descendant.asArray[i] < board.asArray[i]) {
+                        y = i;
+                        break;
+                    }
+                }
                 int x = descendant.asArray[y];
                 coordinates.setLocation(x, y);
                 return coordinates;
             }
         }
+
+        System.out.println("death board");
 
         return coordinates;
     }
